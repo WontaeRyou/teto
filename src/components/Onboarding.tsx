@@ -60,6 +60,25 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
+      <div className="w-full mt-0 px-4" style={{ maxWidth: '100vw' }}>
+        <div id="coupang-partner-ad" className="w-full h-full">
+          {scriptStatus === 'loading' && (
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">광고 로딩 중...</p>
+            </div>
+          )}
+          {scriptStatus === 'error' && (
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">광고를 불러올 수 없습니다</p>
+            </div>
+          )}
+          {scriptStatus === 'loaded' && !adLoaded && !adError && (
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">광고 초기화 중...</p>
+            </div>
+          )}
+        </div>
+      </div>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 px-4 text-main">
         운명의 6월 3일, 당신의 선택은?
       </h1>
@@ -83,25 +102,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
       <p className="text-sm text-gray-500 mt-4 px-4">
         6월 3일은 대선 투표일입니다. 미래를 위해 투표하세요!
       </p>
-      <div className="w-full mt-4 px-4" style={{ maxWidth: '100vw' }}>
-        <div id="coupang-partner-ad" className="w-full h-full">
-          {scriptStatus === 'loading' && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고 로딩 중...</p>
-            </div>
-          )}
-          {scriptStatus === 'error' && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고를 불러올 수 없습니다</p>
-            </div>
-          )}
-          {scriptStatus === 'loaded' && !adLoaded && !adError && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고 초기화 중...</p>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 }; 
