@@ -10,7 +10,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentQuestion }) => 
   const currentTheme = questions[currentQuestion]?.theme || '';
 
   return (
-    <div className="w-full mb-8">
+    <div className="w-full mb-8 mt-4 px-4">
       <div className="flex justify-between mb-2">
         <span className="text-sm font-medium text-gray-700">
           {currentQuestion + 1} / {questions.length}

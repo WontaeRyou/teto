@@ -8,18 +8,18 @@ interface QuestionCardProps {
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onAnswer }) => {
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <div className="mb-4">
+    <div className="w-full bg-white">
+      <div className="mb-4 px-4">
         <span className="inline-block px-3 py-1 text-sm font-semibold text-blue-600 bg-blue-100 rounded-full">
           {question.theme}
         </span>
       </div>
       
-      <h2 className="text-xl font-bold mb-8 text-gray-800">
+      <h2 className="text-xl font-bold mb-8 text-gray-800 px-4">
         {question.text}
       </h2>
 
-      <div className="flex justify-center space-x-4">
+      <div className="flex justify-center space-x-4 px-4">
         <button
           onClick={() => onAnswer(true)}
           className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
