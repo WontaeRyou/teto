@@ -22,13 +22,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question, onAnswer }
       <div className="flex justify-center space-x-4 px-4">
         <button
           onClick={() => onAnswer(true)}
-          className="px-8 py-3 bg-primary hover:bg-primaryHover text-white rounded-lg shadow-md transition-colors"
+          className="px-8 py-3 bg-primary hover:bg-primaryHover text-white rounded-lg shadow-md transition-colors text-lg transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
         >
           동의
         </button>
         <button
           onClick={() => onAnswer(false)}
-          className="px-8 py-3 bg-gray-200 text-main rounded-lg hover:bg-gray-300 transition-colors"
+          className="px-8 py-3 bg-gray-200 text-main rounded-lg hover:bg-gray-300 transition-colors text-lg transform transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
         >
           비동의
         </button>

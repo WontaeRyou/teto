@@ -7,23 +7,16 @@ interface OnboardingProps {
 export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
   const [adLoaded, setAdLoaded] = useState(false);
   const [adError, setAdError] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [scriptStatus, setScriptStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
 
   useEffect(() => {
-    // 모바일 체크
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     // 쿠팡 파트너스 스크립트 로드
     const script = document.createElement('script');
     script.src = 'https://ads-partners.coupang.com/g.js';
     script.async = true;
     
     script.onload = () => {
+      setScriptStatus('loaded');
       const adScript = document.createElement('script');
       adScript.text = `
         try {
@@ -31,8 +24,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
             "id": 869262,
             "template": "carousel",
             "trackingCode": "AF6260974",
-            "width": "${isMobile ? '320' : '728'}",
-            "height": "${isMobile ? '100' : '90'}",
+            "width": "320",
+            "height": "90",
             "tsource": ""
           });
           window.dispatchEvent(new Event('coupangAdLoaded'));
@@ -43,7 +36,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
       document.body.appendChild(adScript);
     };
 
-    script.onerror = () => {
+    script.onerror = (error) => {
+      setScriptStatus('error');
       setAdError(true);
     };
 
@@ -61,9 +55,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
       document.body.removeChild(script);
       window.removeEventListener('coupangAdLoaded', handleAdLoaded);
       window.removeEventListener('coupangAdError', handleAdError);
-      window.removeEventListener('resize', checkMobile);
     };
-  }, [isMobile]); // isMobile 상태가 변경될 때마다 광고 재로드
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
@@ -90,15 +83,25 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
       <p className="text-sm text-gray-500 mt-4 px-4">
         6월 3일은 대선 투표일입니다. 미래를 위해 투표하세요!
       </p>
-      <div className={`w-full ${isMobile ? 'max-w-[320px]' : 'max-w-[728px]'} ${isMobile ? 'h-[100px]' : 'h-[90px]'} mt-8 px-4`}>
+      <div className="w-full mt-8 px-4" style={{ maxWidth: '100vw' }}>
         <div id="coupang-partner-ad" className="w-full h-full">
-          {adError && (
+          {scriptStatus === 'loading' && (
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">광고 로딩 중...</p>
+            </div>
+          )}
+          {scriptStatus === 'error' && (
             <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
               <p className="text-gray-400 text-sm">광고를 불러올 수 없습니다</p>
+            </div>
+          )}
+          {scriptStatus === 'loaded' && !adLoaded && !adError && (
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
+              <p className="text-gray-400 text-sm">광고 초기화 중...</p>
             </div>
           )}
         </div>
       </div>
     </div>
   );
-} 
+}; 
