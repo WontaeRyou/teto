@@ -1,109 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 interface OnboardingProps {
   onStart: () => void;
 }
 
 export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
-  const [adLoaded, setAdLoaded] = useState(false);
-  const [adError, setAdError] = useState(false);
-  const [scriptStatus, setScriptStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
-
-  useEffect(() => {
-    // 쿠팡 파트너스 스크립트 로드
-    const script = document.createElement('script');
-    script.src = 'https://ads-partners.coupang.com/g.js';
-    script.async = true;
-    
-    script.onload = () => {
-      setScriptStatus('loaded');
-      const adScript = document.createElement('script');
-      adScript.text = `
-        try {
-          new PartnersCoupang.G({
-            "id": 869262,
-            "template": "carousel",
-            "trackingCode": "AF6260974",
-            "width": "320",
-            "height": "90",
-            "tsource": "",
-            "target": "coupang-partner-ad"
-          });
-          window.dispatchEvent(new Event('coupangAdLoaded'));
-        } catch (error) {
-          window.dispatchEvent(new Event('coupangAdError'));
-        }
-      `;
-      // adScript를 coupang-partner-ad 내부에 삽입
-      const adContainer = document.getElementById('coupang-partner-ad');
-      if (adContainer) {
-        adContainer.appendChild(adScript);
-      } else {
-        document.body.appendChild(adScript);
-      }
-
-      // 광고가 로드된 후 coupang-partner-ad 외부의 <ins> 태그 제거
-      setTimeout(() => {
-        const allIns = document.querySelectorAll('ins');
-        allIns.forEach(ins => {
-          let parent = ins.parentElement;
-          let isInsideAd = false;
-          while (parent) {
-            if (parent.id === 'coupang-partner-ad') {
-              isInsideAd = true;
-              break;
-            }
-            parent = parent.parentElement;
-          }
-          if (!isInsideAd) {
-            ins.remove();
-          }
-        });
-      }, 1000); // 광고가 렌더링될 시간을 고려해 약간의 딜레이
-    };
-
-    script.onerror = (error) => {
-      setScriptStatus('error');
-      setAdError(true);
-    };
-
-    // 광고 로드 이벤트 리스너
-    const handleAdLoaded = () => setAdLoaded(true);
-    const handleAdError = () => setAdError(true);
-
-    window.addEventListener('coupangAdLoaded', handleAdLoaded);
-    window.addEventListener('coupangAdError', handleAdError);
-
-    document.body.appendChild(script);
-
-    // 컴포넌트 언마운트 시 정리
-    return () => {
-      document.body.removeChild(script);
-      window.removeEventListener('coupangAdLoaded', handleAdLoaded);
-      window.removeEventListener('coupangAdError', handleAdError);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
-      <div className="w-full mt-0 px-4" style={{ maxWidth: '100vw' }}>
-        <div id="coupang-partner-ad" className="w-full h-full">
-          {scriptStatus === 'loading' && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고 로딩 중...</p>
-            </div>
-          )}
-          {scriptStatus === 'error' && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고를 불러올 수 없습니다</p>
-            </div>
-          )}
-          {scriptStatus === 'loaded' && !adLoaded && !adError && (
-            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-              <p className="text-gray-400 text-sm">광고 초기화 중...</p>
-            </div>
-          )}
-        </div>
+      {/* 쿠팡 파트너스 광고 스크립트와 초기화 코드 */}
+      <div style={{ width: '100%' }}>
+        <div dangerouslySetInnerHTML={{ __html: `
+          <script src=\"https://ads-partners.coupang.com/g.js\"></script>
+          <script>
+            new PartnersCoupang.G({
+              id: 869262,
+              template: 'carousel',
+              trackingCode: 'AF6260974',
+              width: '320',
+              height: '90',
+              tsource: ''
+            });
+          </script>
+        ` }} />
       </div>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 px-4 text-main">
         운명의 6월 3일, 당신의 선택은?
