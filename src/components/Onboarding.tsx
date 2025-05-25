@@ -83,7 +83,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
       <p className="text-sm text-gray-500 mt-4 px-4">
         6월 3일은 대선 투표일입니다. 미래를 위해 투표하세요!
       </p>
-      <div className="w-full mt-8 px-4" style={{ maxWidth: '100vw' }}>
+      <div className="w-full mt-4 px-4" style={{ maxWidth: '100vw' }}>
         <div id="coupang-partner-ad" className="w-full h-full">
           {scriptStatus === 'loading' && (
             <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
