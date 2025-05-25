@@ -12,16 +12,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentQuestion }) => 
   return (
     <div className="w-full mb-8 mt-4 px-4">
       <div className="flex justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-main">
           {currentQuestion + 1} / {questions.length}
         </span>
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-main">
           {currentTheme}
         </span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
         <div
-          className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+          className="bg-primary h-2.5 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
