@@ -26,14 +26,40 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
             "trackingCode": "AF6260974",
             "width": "320",
             "height": "90",
-            "tsource": ""
+            "tsource": "",
+            "target": "coupang-partner-ad"
           });
           window.dispatchEvent(new Event('coupangAdLoaded'));
         } catch (error) {
           window.dispatchEvent(new Event('coupangAdError'));
         }
       `;
-      document.body.appendChild(adScript);
+      // adScript를 coupang-partner-ad 내부에 삽입
+      const adContainer = document.getElementById('coupang-partner-ad');
+      if (adContainer) {
+        adContainer.appendChild(adScript);
+      } else {
+        document.body.appendChild(adScript);
+      }
+
+      // 광고가 로드된 후 coupang-partner-ad 외부의 <ins> 태그 제거
+      setTimeout(() => {
+        const allIns = document.querySelectorAll('ins');
+        allIns.forEach(ins => {
+          let parent = ins.parentElement;
+          let isInsideAd = false;
+          while (parent) {
+            if (parent.id === 'coupang-partner-ad') {
+              isInsideAd = true;
+              break;
+            }
+            parent = parent.parentElement;
+          }
+          if (!isInsideAd) {
+            ins.remove();
+          }
+        });
+      }, 1000); // 광고가 렌더링될 시간을 고려해 약간의 딜레이
     };
 
     script.onerror = (error) => {
