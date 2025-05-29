@@ -1,27 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface OnboardingProps {
   onStart: () => void;
 }
 
 export const Onboarding: React.FC<OnboardingProps> = ({ onStart }) => {
+  useEffect(() => {
+    // 광고 스크립트 동적 삽입
+    const script = document.createElement('script');
+    script.src = 'https://ads-partners.coupang.com/g.js';
+    script.async = true;
+    script.onload = () => {
+      const w = window as any;
+      if (w.PartnersCoupang && w.PartnersCoupang.G) {
+        new w.PartnersCoupang.G({
+          id: 869262,
+          template: 'carousel',
+          trackingCode: 'AF6260974',
+          width: '320',
+          height: '90',
+          tsource: '',
+          target: 'coupang-partner-ad'
+        });
+      }
+    };
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
-      {/* 쿠팡 파트너스 광고 스크립트와 초기화 코드 */}
-      <div style={{ width: '100%' }}>
-        <div dangerouslySetInnerHTML={{ __html: `
-          <script src=\"https://ads-partners.coupang.com/g.js\"></script>
-          <script>
-            new PartnersCoupang.G({
-              id: 869262,
-              template: 'carousel',
-              trackingCode: 'AF6260974',
-              width: '320',
-              height: '90',
-              tsource: ''
-            });
-          </script>
-        ` }} />
+      {/* 광고 컨테이너 */}
+      <div className="w-full mt-0 px-4" style={{ maxWidth: '100vw' }}>
+        <div id="coupang-partner-ad" className="w-full h-full" />
       </div>
       <h1 className="text-2xl md:text-3xl font-bold mb-6 px-4 text-main">
         운명의 6월 3일, 당신의 선택은?
